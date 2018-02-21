@@ -1,27 +1,55 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <style>
+    body {background-color: powderblue;}
+    h1   {color: blue;}
+    p    {color: black;}
+    </style>
     <script src="jquery.js"></script>
     <script src="data_generator.js"></script>
+    <script src="moment.js"></script>
   </head>
   <body>
+    
     <script>
 
       $(document).ready(function(){
         var $body = $('body');
-        $body.html('');
 
-        var index = streams.home.length - 1;
-        while(index >= 0){
-          var tweet = streams.home[index];
+        var timer = setInterval(function() {
+          //console.log(streams.home);
+
+        var lastTweetAdded = streams.home.length - 1;
+        var lastTweetPosted = $('body').children().length - 1;
+
+        while(lastTweetAdded > lastTweetPosted){
+          var tweet = streams.home[lastTweetAdded];
           var $tweet = $('<div></div>');
-          $tweet.text('@' + tweet.user + ': ' + tweet.message);
-          $tweet.appendTo($body);
-          index -= 1;
-        }
+          //$tweet.addClass(allTweets);
 
-      });
+          var $user = $('<span></span>');
+          $user.addClass(tweet.user);
+          $user.text('@' + tweet.user);
+          $user.on('click', function() {
+            $body.html('');
+            console.log('click worked');
+            $(this).show();
+          });
+
+          var timeStamp = moment().format('MMMM Do YYYY, h:mm:ss a');
+          $tweet.text(': ' + tweet.message + ' -- ' + timeStamp);
+          var wholeTweet = $user.prependTo($tweet);
+          $tweet.prependTo($body);
+
+          lastTweetAdded -= 1;
+                    
+        }
+        }, 2000); 
+
+  });
 
     </script>
+    
   </body>
 </html>
