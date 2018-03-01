@@ -6,13 +6,16 @@
     <link rel="stylesheet" href="stylesheet.css">
   </head>
   <body>
+    <header>
+      <h1>Welcome to Twittler!</h1>
+    </header>
     <section class="grid">
     <script>
 
       $(document).ready(function(){
-        var $body = $('body');
+        var $body = $('section');
         
-        var timer = setInterval(function() {
+        
         var users = streams.users; 
         //console.log(users);
         //streams.users is an object filled with 4 user arrays
@@ -21,41 +24,39 @@
         //note: there's no @ symbol
         //console.log(streams.users);
 
-        var lastTweetAdded = streams.home.length - 1;
-        var lastTweetPosted = $('body').children().length - 1;
-        while(lastTweetAdded > lastTweetPosted){
-          var tweet = streams.home[lastTweetAdded];
-          var $tweet = $('<div id="allTweets"></div>');
-          var $user = $('<span></span>');
-          $user.addClass(tweet.user);
-          $user.text('@' + tweet.user);
-          $user.on('click', function(e) {
-            $(this).addClass('filteredTweet');
-            console.log('click worked');
-            //$('#allTweets').filter(this).addClass('filteredTweet');
-            //$('#allTweets').filter('.sharksforcheap').hide();
-            //$("div").filter('.sharksforcheap').hide();
-            //$('span').parent().addClass('hidden');
-            
-            //$('#allTweets').children().toggleClass('hidden');
-            //working for the selected user, don't touch this code ^
+        var displayTweets = function() {
 
-            //var user = $(this).text().trim();
-            //console.log(user);
-             // if (e.target.className === this) {
-               // $(e.target.className).addClass('filteredTweet');
-               // $('.filteredTweet').toggle();
-              //} else {
-                //$(user).removeClass('filteredTweet').slideUp();
-              //}              
-            });
-          $tweet.text(': ' + tweet.message + ' -- ' + tweet.created_at);
-          $user.prependTo($tweet);
-          $tweet.prependTo($body);
-          lastTweetAdded -= 1;
-                    
+          var lastTweetAdded = streams.home.length - 1;
+          var lastTweetPosted = $('section').children().length - 1;
+
+          while(lastTweetAdded > lastTweetPosted){
+            var tweet = streams.home[lastTweetAdded];
+            var $tweet = $('<div id="allTweets"></div>');
+            var $user = $('<span></span>');
+            $user.addClass(tweet.user);
+            $user.text('@' + tweet.user);
+            $user.on('click', function(e) {
+              $(this).addClass('filteredTweet');
+              console.log(e);
+              clearInterval(checkForTweets);
+              $('span').parent().addClass('hidden');
+              $('span').filter('e.target.className').addClass('show');
+              });
+              //checkForTweets();
+            $tweet.text(': ' + tweet.message + ' -- ' + tweet.created_at);
+            $user.prependTo($tweet);
+            $tweet.prependTo($body);
+            lastTweetAdded -= 1;   
+          }         
         }
+
+        var checkForTweets = setInterval(function() {
+          displayTweets();
         }, 2000);
+
+        var stopCheckingForTweets = function() {
+          clearInterval(checkForTweets);
+        }
 
       });
 
