@@ -10,12 +10,12 @@
       <h1>Welcome to Twittler!</h1>
     </header>
     <section class="grid">
+
     <script>
         //assumption - using show/hide is going about this the wrong way, since they work best for buttons. instead, if I want my scrolling, auto updates, I'll need to iterate through the array of that specific username. show and hide will only show what's already updated on the page, not any new tweets. 
       
       $(document).ready(function(){
         var $body = $('section');
-        displayTweets;
 
         var displayTweets = function() {
           var lastTweetAdded = streams.home.length - 1;
@@ -27,10 +27,8 @@
             $tweet.prependTo($body);
             lastTweetAdded -= 1;   
             $tweet.on('click', function() {
-              //var $userName = $(this).closest('.tweet').attr('data-user');
-              //console.log($userName);
+              //stopCheckingForTweets();
               displayUserTweets();
-              //console.log('click worked');
             });
           } 
         };
@@ -44,25 +42,24 @@
               var index = thisUser.length - 1;
                 console.log(index);
               while(index >= 0){
-                $body.html('');
                 var tweet = thisUser[index];
+                console.log(tweet);
                 var $tweet = $('<div class="tweet '+tweet.user+'" data-user='+tweet.user+'><span class="'+tweet.user+'"></span></div>');
                 $tweet.text('@' + tweet.user + ': ' + tweet.message + ' -- ' + tweet.created_at);
                 $tweet.prependTo($body);
-                index -= 1;   
+                index -= 1;  
               };
             });
-          //}; 
         };   
 
         var checkForTweets = setInterval(function() {
           displayTweets();
+          $body.on('click', 'div', displayUserTweets).on('click', displayTweets);
         }, 2000);
 
         var stopCheckingForTweets = function() {
           clearInterval(checkForTweets);
         };
-
 
         checkForTweets;
 
