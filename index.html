@@ -3,7 +3,6 @@
   <head>
     <script src="jquery.js"></script>
     <script src="data_generator.js"></script>
-    <script src="moment.js"></script>
     <link rel="stylesheet" href="stylesheet.css">
   </head>
   <body>
@@ -14,32 +13,44 @@
         var $body = $('body');
         
         var timer = setInterval(function() {
-        var users = streams.users;
+        var users = streams.users; 
+        //console.log(users);
+        //streams.users is an object filled with 4 user arrays
+        //each array contains a bunch of objects, with keys called user, message, and created_at
+        //{user: "douglascalhoun", message: "a seedy old man enjoyed the worm #sxsw", created_at: Wed Feb 28 2018 18:13:31 GMT-0800 (PST)}
+        //note: there's no @ symbol
+        //console.log(streams.users);
+
         var lastTweetAdded = streams.home.length - 1;
         var lastTweetPosted = $('body').children().length - 1;
         while(lastTweetAdded > lastTweetPosted){
           var tweet = streams.home[lastTweetAdded];
-          var $tweet = $('<div class="allTweets"></div>');
+          var $tweet = $('<div id="allTweets"></div>');
           var $user = $('<span></span>');
           $user.addClass(tweet.user);
           $user.text('@' + tweet.user);
           $user.on('click', function(e) {
-            //console.log('click worked');
             $(this).addClass('filteredTweet');
-            var user = $(this).text().trim();
+            console.log('click worked');
+            //$('#allTweets').filter(this).addClass('filteredTweet');
+            //$('#allTweets').filter('.sharksforcheap').hide();
+            //$("div").filter('.sharksforcheap').hide();
+            //$('span').parent().addClass('hidden');
+            
+            //$('#allTweets').children().toggleClass('hidden');
+            //working for the selected user, don't touch this code ^
+
+            //var user = $(this).text().trim();
             //console.log(user);
-            var currentUser = $(lastTweetAdded).find(this).text().trim();
-            //console.log(currentUser);
-            if (currentUser === user) {
-              $('currentUser').addClass('filteredTweet');
-              $('.filteredTweet').show();
-           // } else {
-             // $('currentUser').removeClass('filteredTweet').slideUp();
-           }
-          });
-          var timeStamp = moment().format('MMMM Do YYYY, h:mm:ss a');
-          $tweet.text(': ' + tweet.message + ' -- ' + timeStamp);
-          var wholeTweet = $user.prependTo($tweet);
+             // if (e.target.className === this) {
+               // $(e.target.className).addClass('filteredTweet');
+               // $('.filteredTweet').toggle();
+              //} else {
+                //$(user).removeClass('filteredTweet').slideUp();
+              //}              
+            });
+          $tweet.text(': ' + tweet.message + ' -- ' + tweet.created_at);
+          $user.prependTo($tweet);
           $tweet.prependTo($body);
           lastTweetAdded -= 1;
                     
