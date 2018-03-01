@@ -11,44 +11,49 @@
     </header>
     <section class="grid">
     <script>
-
+        //assumption - using show/hide is going about this the wrong way, since they work best for buttons. instead, if I want my scrolling, auto updates, I'll need to iterate through the array of that specific username. show and hide will only show what's already updated on the page, not any new tweets. 
+      
       $(document).ready(function(){
         var $body = $('section');
-        
-        
-        var users = streams.users; 
-        //console.log(users);
-        //streams.users is an object filled with 4 user arrays
-        //each array contains a bunch of objects, with keys called user, message, and created_at
-        //{user: "douglascalhoun", message: "a seedy old man enjoyed the worm #sxsw", created_at: Wed Feb 28 2018 18:13:31 GMT-0800 (PST)}
-        //note: there's no @ symbol
-        //console.log(streams.users);
+        displayTweets;
 
         var displayTweets = function() {
-
           var lastTweetAdded = streams.home.length - 1;
           var lastTweetPosted = $('section').children().length - 1;
-
           while(lastTweetAdded > lastTweetPosted){
             var tweet = streams.home[lastTweetAdded];
-            var $tweet = $('<div id="allTweets"></div>');
-            var $user = $('<span></span>');
-            $user.addClass(tweet.user);
-            $user.text('@' + tweet.user);
-            $user.on('click', function(e) {
-              $(this).addClass('filteredTweet');
-              console.log(e);
-              clearInterval(checkForTweets);
-              $('span').parent().addClass('hidden');
-              $('span').filter('e.target.className').addClass('show');
-              });
-              //checkForTweets();
-            $tweet.text(': ' + tweet.message + ' -- ' + tweet.created_at);
-            $user.prependTo($tweet);
+            var $tweet = $('<div class="tweet '+tweet.user+'" data-user='+tweet.user+'><span class="'+tweet.user+'"></span></div>');
+            $tweet.text('@' + tweet.user + ': ' + tweet.message + ' -- ' + tweet.created_at);
             $tweet.prependTo($body);
             lastTweetAdded -= 1;   
-          }         
-        }
+            $tweet.on('click', function() {
+              //var $userName = $(this).closest('.tweet').attr('data-user');
+              //console.log($userName);
+              displayUserTweets();
+              //console.log('click worked');
+            });
+          } 
+        };
+
+        var displayUserTweets = function() {
+          $('div').on('click', function() {
+              var $userName = $(this).closest('.tweet').attr('data-user');
+                console.log($userName);
+              var thisUser = streams.users[$userName];
+                console.log(thisUser);
+              var index = thisUser.length - 1;
+                console.log(index);
+              while(index >= 0){
+                $body.html('');
+                var tweet = thisUser[index];
+                var $tweet = $('<div class="tweet '+tweet.user+'" data-user='+tweet.user+'><span class="'+tweet.user+'"></span></div>');
+                $tweet.text('@' + tweet.user + ': ' + tweet.message + ' -- ' + tweet.created_at);
+                $tweet.prependTo($body);
+                index -= 1;   
+              };
+            });
+          //}; 
+        };   
 
         var checkForTweets = setInterval(function() {
           displayTweets();
@@ -56,7 +61,10 @@
 
         var stopCheckingForTweets = function() {
           clearInterval(checkForTweets);
-        }
+        };
+
+
+        checkForTweets;
 
       });
 
