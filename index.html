@@ -16,6 +16,7 @@
       
       $(document).ready(function(){
         var $body = $('section');
+        $(this).scrollTop(0); 
 
         var displayTweets = function() {
           var lastTweetAdded = streams.home.length - 1;
@@ -41,16 +42,21 @@
                 console.log(thisUser);
               var index = thisUser.length - 1;
                 console.log(index);
+              clearInterval(checkForTweets);
               while(index >= 0){
                 var tweet = thisUser[index];
                 console.log(tweet);
                 var $tweet = $('<div class="tweet '+tweet.user+'" data-user='+tweet.user+'><span class="'+tweet.user+'"></span></div>');
                 $tweet.text('@' + tweet.user + ': ' + tweet.message + ' -- ' + tweet.created_at);
                 $tweet.prependTo($body);
-                index -= 1;  
+                index -= 1; 
               };
             });
         };   
+        //works for mracus
+        //works for sharksforcheap
+        //works for douglascalhoun
+        //doesn't quite work for shawndrost, since he seems to have less tweets generated
 
         var checkForTweets = setInterval(function() {
           displayTweets();
